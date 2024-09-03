@@ -68,14 +68,17 @@ def handle_file_message(event):
          # 取得文件內容
         message_content = line_bot_api.get_message_content(message_id)
         file_bytes = io.BytesIO(message_content.content)
+        size = len(file_bytes.getvalue())
         try:
             data = evalue_plan.get_evalue_plans(file_bytes)
             # 回傳處理後的數據
             reply = f"你的檔案 '{file_name}' 中的前五行資料為：\n{data}"
+            reply += f"檔案大小:{size}"
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
 
         except Exception as e:
             reply = f"讀取 Excel 文件時發生錯誤：{str(e)}"
+            reply += f"檔案大小:{size}"
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
 
     else:
