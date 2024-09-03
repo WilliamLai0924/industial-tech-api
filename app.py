@@ -1,9 +1,11 @@
 import os
+import io
+import evalue_plan
 
-from flask import Flask, jsonify, request
+from flask import Flask, abort, jsonify, request
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, FileMessage
 
 app = Flask(__name__)
 
@@ -56,6 +58,29 @@ def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))  # 回覆相同的訊息
+
+@handler.add(MessageEvent, message=FileMessage)
+def handle_file_message(event):
+    message_id = event.message.id
+    file_name = event.message.file_name
+
+    if file_name.endswith('.xlsx'):
+         # 取得文件內容
+        message_content = line_bot_api.get_message_content(message_id)
+        file_bytes = io.BytesIO(message_content.content)
+        try:
+            data = evalue_plan.get_evalue_plans(file_bytes)
+            # 回傳處理後的數據
+            reply = f"你的檔案 '{file_name}' 中的前五行資料為：\n{data}"
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+
+        except Exception as e:
+            reply = f"讀取 Excel 文件時發生錯誤：{str(e)}"
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+
+    else:
+        reply = "請上傳 .xlsx 檔案格式的文件。"
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
 
 if __name__ == '__main__':
     app.run()
