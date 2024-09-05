@@ -28,8 +28,8 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
     names = data['人員二'].unique()
     for name in names:
         employee = data[data['人員二'] == name]
-        employee['時間2'] = employee['時間'].apply(extract_start_time)
-        times = employee.sort_values(by='時間2')['時間'].unique()        
+        employee.loc[:, '時間2'] = employee['時間'].apply(extract_start_time)
+        times = employee.sort_values(by='時間2')['時間'].unique()
         contens = []
         placeCount = 1
         for time in times:
