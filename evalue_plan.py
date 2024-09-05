@@ -46,11 +46,11 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
                 if place['印尼'] > 0:
                     foreigners.append(f'印尼出席人數{place['印尼']}位')
                 if place['泰國'] > 0:
-                    foreigners.append(f'印尼出席人數{place['印尼']}位')
+                    foreigners.append(f'泰國出席人數{place['泰國']}位')
                 if place['越南'] > 0:
-                    foreigners.append(f'印尼出席人數{place['印尼']}位')
+                    foreigners.append(f'越南出席人數{place['越南']}位')
                 if place['菲律賓'] > 0:
-                    foreigners.append(f'印尼出席人數{place['印尼']}位')
+                    foreigners.append(f'菲律賓出席人數{place['菲律賓']}位')
                 if place['通譯一'] is not None:
                     translatorContent += place['通譯一']
                 if place['通譯二'] is not None:
@@ -91,7 +91,7 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
 def get_dateTimes(data: pd.DataFrame):
     dates = data[data['日期'] > datetime.now()]
     dates = dates.sort_values(by='日期')
-    return dates['日期'].tolist()
+    return dates['日期'].unique().tolist()
 
 
 def extract_start_time(time_range):
