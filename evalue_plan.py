@@ -44,13 +44,13 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
                 titles.append(f'第{placeCount}間')
                 placeCount += 1
                 if place['印尼'] > 0:
-                    foreigners.append(f'印尼出席人數{place['印尼']}位')
+                    foreigners.append('印尼出席人數'+ int(place['印尼']) +'位')
                 if place['泰國'] > 0:
-                    foreigners.append(f'泰國出席人數{place['泰國']}位')
+                    foreigners.append('泰國出席人數'+ int(place['泰國']) +'位')
                 if place['越南'] > 0:
-                    foreigners.append(f'越南出席人數{place['越南']}位')
+                    foreigners.append('越南出席人數'+ int(place['越南']) +'位')
                 if place['菲律賓'] > 0:
-                    foreigners.append(f'菲律賓出席人數{place['菲律賓']}位')
+                    foreigners.append('菲律賓出席人數'+ int(place['菲律賓']) +'位')
                 if place['通譯一'] is not None:
                     translatorContent += place['通譯一']
                 if place['通譯二'] is not None:
