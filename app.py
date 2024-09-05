@@ -65,20 +65,32 @@ def handle_file_message(event):
     file_name = event.message.file_name
 
     if file_name.endswith('.xlsx'):
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='收到! 正在幫您整理~'))
+        
          # 取得文件內容
         message_content = line_bot_api.get_message_content(message_id)
         file_bytes = io.BytesIO(message_content.content)
-        size = len(file_bytes.getvalue())
+        
         try:
-            data = evalue_plan.get_evalue_plans(file_bytes)
-            # 回傳處理後的數據
-            reply = f"你的檔案 '{file_name}' 中的前五行資料為：\n{data}"
-            reply += f"檔案大小:{size}"
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+            data = evalue_plan.get_excel_data(file_bytes)
+            filter_df = evalue_plan.filter_valid_data(data)
+            dates = evalue_plan.get_dateTimes(filter_df)
+            if len(dates) > 0:
+                for date in dates:
+                    date = str(date).split(' ')[0]
+                    reply = f"{date}："
+                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+                    # 回傳處理後的數據
+                    plans_dict = evalue_plan.get_sameday_plan(filter_df, date)
+                    for k, v in plans_dict.items():
+                        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=k + ":"))
+                        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=v))
+            else:
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
 
         except Exception as e:
             reply = f"讀取 Excel 文件時發生錯誤：{str(e)}"
-            reply += f"檔案大小:{size}"
+            
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
 
     else:
