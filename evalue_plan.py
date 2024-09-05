@@ -44,35 +44,26 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
                 titles.append(f'第{placeCount}間')
                 placeCount += 1
                 if place['印尼'] > 0:
-                    foreigners.append('印尼出席人數'+ int(place['印尼']) +'位')
+                    foreigners.append('印尼出席人數'+ str(int(place['印尼'])) +'位')
                 if place['泰國'] > 0:
-                    foreigners.append('泰國出席人數'+ int(place['泰國']) +'位')
+                    foreigners.append('泰國出席人數'+ str(int(place['泰國'])) +'位')
                 if place['越南'] > 0:
-                    foreigners.append('越南出席人數'+ int(place['越南']) +'位')
+                    foreigners.append('越南出席人數'+ str(int(place['越南'])) +'位')
                 if place['菲律賓'] > 0:
-                    foreigners.append('菲律賓出席人數'+ int(place['菲律賓']) +'位')
-                if place['通譯一'] is not None:
+                    foreigners.append('菲律賓出席人數'+ str(int(place['菲律賓'])) +'位')
+                if pd.isna(place['通譯一']) == False:
                     translatorContent += place['通譯一']
-                if place['通譯二'] is not None:
-                    translatorContent += f', {place['通譯二']}'
-                if place['通譯三'] is not None:
-                    translatorContent += f', {place['通譯三']}'
+                if pd.isna(place['通譯二']) == False :
+                    translatorContent += ', '+ (place['通譯二'])
+                if pd.isna(place['通譯三']) == False:
+                    translatorContent += ', '+ (place['通譯三'])
                 
                 translators.append(translatorContent)
                 forContents.append(place['雇主名稱'] + ':\n' + "/".join(foreigners))
                 contacts.append(place['聯絡人'] if len(place) == 1 else  place['雇主名稱'] + "-" + place['聯絡人'])
             
             tap = "" if len(places) == 1 else '*宣導可以多間公司同時進行，但拍照請雇主及外國人分開拍攝，如方便可採不同背景做拍攝，感謝~~~'
-            content = f'''輔導人員:{"/".join(set(s['人員一'] for i, s in places.iterrows()))}
-工作人員:{"/".join(set(s['人員二'] for i, s in places.iterrows()))}
-{"及".join(titles)}:{time}
-{"/".join(set(s['電話'] for i, s in places.iterrows()))}
-{"/".join(set(f"{s['雇主名稱']}\n{s['郵遞區號']}{s['地址']}\n(https://www.google.com/maps/search/?api=1&query={s['雇主名稱']})" for i, s in places.iterrows()))}
-{"\n".join(set(forContents))}
-翻譯:{"/".join(set(translators))}({"" if len(places['聯絡情形']) == 1 else "/".join(set(s['聯絡情形'] for i, s in places.iterrows()))})
-聯絡窗口:
-{"\n".join(contacts)}
-{tap}'''
+            content = '輔導人員:'+ "/".join(set(s['人員一'] for i, s in places.iterrows())) +'\n'+ '工作人員:'+ "/".join(set(s['人員二'] for i, s in places.iterrows())) +'\n'+ "及".join(titles)+':'+time +'\n'+"/".join(set(s['電話'] for i, s in places.iterrows()))+'\n'+"/".join(set(f"{s['雇主名稱']}\n{s['郵遞區號']}{s['地址']}\n(https://www.google.com/maps/search/?api=1&query={s['雇主名稱']})" for i, s in places.iterrows()))+'\n'+"\n".join(set(forContents))+'翻譯:' + "/".join(set(translators))+"" if len(places['聯絡情形']) == 1 else "/".join(set(s['聯絡情形'] for i, s in places.iterrows()))+'\n'+ '聯絡窗口:'+'\n'+"\n".join(contacts)+'\n'+ tap
             contens.append(content)
         
         if name not in result:
