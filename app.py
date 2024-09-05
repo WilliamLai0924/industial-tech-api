@@ -65,26 +65,31 @@ def handle_file_message(event):
     file_name = event.message.file_name
 
     if file_name.endswith('.xlsx'):
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='收到! 正在幫您整理~'))
-        
+        # line_bot_api.reply_message(event.reply_token, TextSendMessage(text='收到! 正在幫您整理~'))        
          # 取得文件內容
         message_content = line_bot_api.get_message_content(message_id)
         file_bytes = io.BytesIO(message_content.content)
-        
+        # line_bot_api.reply_message(event.reply_token, TextSendMessage(text=f'檔案大小:{file_bytes}'))
         try:
             data = evalue_plan.get_excel_data(file_bytes)
             filter_df = evalue_plan.filter_valid_data(data)
             dates = evalue_plan.get_dateTimes(filter_df)
             if len(dates) > 0:
+                messages = []
                 for date in dates:
                     date = str(date).split(' ')[0]
                     reply = f"{date}："
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+                    messages.append(reply)
+                    # line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
                     # 回傳處理後的數據
                     plans_dict = evalue_plan.get_sameday_plan(filter_df, date)
                     for k, v in plans_dict.items():
-                        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=k + ":"))
-                        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=v))
+                        messages.append(k + ":")
+                        messages.append(v)
+                        # line_bot_api.reply_message(event.reply_token, TextSendMessage(text=k + ":"))
+                        # line_bot_api.reply_message(event.reply_token, TextSendMessage(text=v))
+
+                line_bot_api.reply_message(event.reply_token, messages)
             else:
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
 
