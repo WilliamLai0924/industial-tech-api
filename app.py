@@ -68,10 +68,13 @@ def handle_file_message(event):
          # 取得文件內容
         message_content = line_bot_api.get_message_content(message_id)
         file_bytes = io.BytesIO(message_content.content)
+        ec = 0
         try:
             data = evalue_plan.get_excel_data(file_bytes)
             filter_df = evalue_plan.filter_valid_data(data)
+            ec+=1
             dates = evalue_plan.get_dateTimes(filter_df)
+            ec+=1
             if len(dates) > 0:
                 messages = []
                 for date in dates:
@@ -80,6 +83,7 @@ def handle_file_message(event):
                     messages.append(reply)
                     # 回傳處理後的數據
                     plans_dict = evalue_plan.get_sameday_plan(filter_df, date)
+                    ec+=1
                     for k, v in plans_dict.items():
                         messages.append(k + ":")
                         messages.append(v)
@@ -89,7 +93,7 @@ def handle_file_message(event):
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
 
         except Exception as e:
-            reply = f"讀取 Excel 文件時發生錯誤：{str(e)}"
+            reply = f"讀取 Excel 文件時發生錯誤：{str(ec) + ": "+ str(e)}"
             
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
 
