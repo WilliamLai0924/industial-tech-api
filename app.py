@@ -87,7 +87,7 @@ def handle_file_message(event):
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
 
         except Exception as e:
-            reply = "讀取 Excel 文件時發生錯誤：" + str(ec) + " : "+ str(e)
+            reply = "讀取 Excel 文件時發生錯誤：" + str(e)
             
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
 
