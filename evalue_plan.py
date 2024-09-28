@@ -48,27 +48,27 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
                     translatorContent = ""
                     titles.append(f'第{placeCount}間')
                     placeCount += 1
-                    if place['印尼'] > 0:
-                        foreigners.append('印尼出席人數'+ str(int(place['印尼'])) +'位')
-                        ec += 1
-                    if place['泰國'] > 0:
-                        foreigners.append('泰國出席人數'+ str(int(place['泰國'])) +'位')
-                        ec += 1
-                    if place['越南'] > 0:
-                        foreigners.append('越南出席人數'+ str(int(place['越南'])) +'位')
-                        ec += 1
-                    if place['菲律賓'] > 0:
-                        foreigners.append('菲律賓出席人數'+ str(int(place['菲律賓'])) +'位')
-                        ec += 1
-                    if pd.isna(place['通譯一']) == False:
-                        translatorContent += place['通譯一']
-                        ec += 1
-                    if pd.isna(place['通譯二']) == False :
-                        translatorContent += ', '+ (place['通譯二'])
-                        ec += 1
-                    if pd.isna(place['通譯三']) == False:
-                        translatorContent += ', '+ (place['通譯三'])
-                        ec += 1
+                    # if place['印尼'] > 0:
+                    #     foreigners.append('印尼出席人數'+ str(int(place['印尼'])) +'位')
+                    #     ec += 1
+                    # if place['泰國'] > 0:
+                    #     foreigners.append('泰國出席人數'+ str(int(place['泰國'])) +'位')
+                    #     ec += 1
+                    # if place['越南'] > 0:
+                    #     foreigners.append('越南出席人數'+ str(int(place['越南'])) +'位')
+                    #     ec += 1
+                    # if place['菲律賓'] > 0:
+                    #     foreigners.append('菲律賓出席人數'+ str(int(place['菲律賓'])) +'位')
+                    #     ec += 1
+                    # if pd.isna(place['通譯一']) == False:
+                    #     translatorContent += place['通譯一']
+                    #     ec += 1
+                    # if pd.isna(place['通譯二']) == False :
+                    #     translatorContent += ', '+ (place['通譯二'])
+                    #     ec += 1
+                    # if pd.isna(place['通譯三']) == False:
+                    #     translatorContent += ', '+ (place['通譯三'])
+                    #     ec += 1
                     translators.append(translatorContent)
                     forContents.append(place['雇主名稱'] + ':\n' + "/".join(foreigners))
                     contacts.append(place['聯絡人'] if len(place) == 1 else  place['雇主名稱'] + "-" + place['聯絡人'])
