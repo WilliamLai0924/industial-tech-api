@@ -28,10 +28,10 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
     names = data['人員二'].unique()
     ec = 0
     for name in names:
+        employee={}
         try:
             employee = data[data['人員二'] == name]
-            # employee = employee.copy()
-            # employee.loc[:, '時間2'] = employee['時間'].apply(extract_start_time)
+            employee.loc[:, '時間2'] = employee['時間'].apply(extract_start_time)
             times = employee.sort_values(by='時間')['時間'].unique()
             ec += 1
             contens = []
@@ -91,7 +91,10 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
                         ]))        
             ec += 1
         except Exception as e:
-            raise Exception(str(ec) + str(e))
+            raise Exception(str(ec) + str(employee))
+        
+    if ec >= 47:
+        e = 0
         
     return result
 
