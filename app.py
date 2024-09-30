@@ -1,11 +1,20 @@
 import os
 import io
 import evalue_plan
+import clr
+import sys
 
 from flask import Flask, abort, jsonify, request
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, FileMessage
+
+
+sys.path.append(os.path.dirname(__file__))
+
+clr.AddReference('plan_kernel')
+
+from plan_kernel import PlanControl
 
 app = Flask(__name__)
 
@@ -55,9 +64,11 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    control = PlanControl()
+    txt = control.Hello()
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))  # 回覆相同的訊息
+        TextSendMessage(text= txt + ":" + event.message.text))  # 回覆相同的訊息
 
 @handler.add(MessageEvent, message=FileMessage)
 def handle_file_message(event):
