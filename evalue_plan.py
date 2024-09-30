@@ -88,7 +88,7 @@ def get_sameday_plan(data: pd.DataFrame, dateTime):
                             '貼心提醒',
                             '1. 輔導記錄照片請盡量採橫式拍攝，並留意清晰度。',
                             '2. 請協助篩選呈現效果好，適合刊登新聞的照片（如取鏡畫質佳、主題明確、未過度揭露移工面容資訊等），8張海報都需要。'
-                        ]))        
+                        ]))
             ec += 1
         except Exception as e:
             raise Exception(str(ec) + str(employee))
@@ -102,7 +102,6 @@ def get_dateTimes(data: pd.DataFrame):
     dates = data[data['日期'] > datetime.now()]
     dates = dates.sort_values(by='日期')
     return dates['日期'].unique().tolist()
-
 
 def extract_start_time(time_range):
     start_time_str = time_range.split('-')[0]
