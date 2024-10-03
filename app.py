@@ -74,11 +74,12 @@ def handle_file_message(event):
         try:            
             messages = []
             messages.append('SS')
-            data = evalue_plan.get_excel_data(file_bytes)
-            messages.append(str(len(data)))
+            messages.append(str(file_bytes))
+            # data = evalue_plan.get_excel_data(file_bytes)
+            # messages.append(str(len(data)))
             # filter_df = evalue_plan.filter_valid_data(data)   
             # dates = evalue_plan.get_dateTimes2(filter_df)
-            if len(data) > 0:
+            if 1 > 0:
                 # messages.append(len(data))
                 # messages.append(data)
                 # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
