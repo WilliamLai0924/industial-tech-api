@@ -75,7 +75,7 @@ def handle_file_message(event):
             messages = []
             messages.append('SS')
             data = evalue_plan.get_excel_data(file_bytes)
-            messages.append(len(data).__str__())
+            messages.append(str(len(data)))
             # filter_df = evalue_plan.filter_valid_data(data)   
             # dates = evalue_plan.get_dateTimes2(filter_df)
             if len(data) > 0:
