@@ -131,7 +131,7 @@ def handle_file_message(event):
                     # for k, v in plans_dict.items():
                     #     messages.append(k + ":")
                     #     messages.append(v)
-                line_bot_api.reply_message(event.reply_token, messages)
+                line_bot_api.reply_message(event.reply_token, messages=messages)
             else:
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
 
