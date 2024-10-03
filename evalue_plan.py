@@ -103,6 +103,11 @@ def get_dateTimes(data: pd.DataFrame):
     dates = dates.sort_values(by='日期')
     return dates['日期'].unique().tolist()
 
+def get_dateTimes2(data: pd.DataFrame):
+    dates = data[data['日期'] > datetime.now()]
+    dates = dates.sort_values(by='日期')
+    return dates
+
 def extract_start_time(time_range):
     start_time_str = time_range.split('-')[0]
     return datetime.strptime(start_time_str, "%H:%M")

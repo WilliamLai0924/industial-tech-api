@@ -5,6 +5,7 @@ import requests
 import json
 import pandas as pd
 
+from datetime import datetime
 from flask import Flask, abort, jsonify, request
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
@@ -73,32 +74,56 @@ def handle_file_message(event):
         try:
             data = evalue_plan.get_excel_data(file_bytes)
             filter_df = evalue_plan.filter_valid_data(data)   
-            dates = evalue_plan.get_dateTimes(filter_df)     
+            dates = evalue_plan.get_dateTimes2(filter_df)
             if len(dates) > 0:
                 messages = []
-                for date in dates:
-                    date = str(date).split(' ')[0]
-                    reply = f"{date}："
-                    messages.append(reply)
+                messages.append(len(dates))
+                messages.append(dates)
+                # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
+                # dates['日期'] = dates['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
+                # date_df = date_df.where(pd.notnull(date_df), None)
+                # date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
+                # data = {
+                #     'EvalueList':date_df.values.tolist(),
+                #     'Date':datetime.now().strftime("%Y-%m-%d")
+                # }
+                # json_data = json.dumps(data, ensure_ascii=False)
+                # # 設置請求標頭
+                # headers = {
+                #     "Content-Type": "application/json"
+                # }
+                # # 發送 POST 請求
+                # plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
+                
+                # for iplan in plan:
+                #     messages.append(iplan)
 
-                    date_df = filter_df[filter_df['日期'] == date]
+                
+                # for date in dates:
+                #     date = str(date).split(' ')[0]
+                #     reply = f"{date}："
+                #     messages.append(reply)
 
-                    # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
-                    date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
-                    date_df = date_df.where(pd.notnull(date_df), None)
-                    date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
-                    data = {
-                        'EvalueList':date_df.values.tolist(),
-                        'Date':date.strftime("%Y-%m-%d")
-                    }
-                    json_data = json.dumps(data, ensure_ascii=False)
-                    # 設置請求標頭
-                    headers = {
-                        "Content-Type": "application/json"
-                    }
-                    # 發送 POST 請求
-                    plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
-                    messages.append(plan)
+                #     date_df = filter_df[filter_df['日期'] == date]
+
+                #     # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
+                #     date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
+                #     date_df = date_df.where(pd.notnull(date_df), None)
+                #     date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
+                #     data = {
+                #         'EvalueList':date_df.values.tolist(),
+                #         'Date':date.strftime("%Y-%m-%d")
+                #     }
+                #     json_data = json.dumps(data, ensure_ascii=False)
+                #     # 設置請求標頭
+                #     headers = {
+                #         "Content-Type": "application/json"
+                #     }
+                #     # 發送 POST 請求
+                #     plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
+                    
+                #     for iplan in plan:
+                #         messages.append(iplan)
                     # 回傳處理後的數據
                     # plans_dict = evalue_plan.get_sameday_plan(filter_df, date)
                     # for k, v in plans_dict.items():
