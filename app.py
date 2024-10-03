@@ -12,13 +12,6 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, FileMessage
 
-
-sys.path.append(os.path.dirname(__file__))
-
-clr.AddReference('TaichungIndustialSystem.core')
-
-from TaichungIndustialSystem.core import PlanArrangeControl
-
 app = Flask(__name__)
 
 channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
@@ -67,11 +60,9 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    control = PlanArrangeControl()
-    txt = control.Hello()
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text= txt + ":" + event.message.text))  # 回覆相同的訊息
+        TextSendMessage(text= event.message.text))  # 回覆相同的訊息
 
 @handler.add(MessageEvent, message=FileMessage)
 def handle_file_message(event):
