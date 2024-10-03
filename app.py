@@ -74,11 +74,11 @@ def handle_file_message(event):
         try:
             data = evalue_plan.get_excel_data(file_bytes)
             filter_df = evalue_plan.filter_valid_data(data)   
-            dates = evalue_plan.get_dateTimes2(filter_df)
-            if len(dates) > 0:
+            # dates = evalue_plan.get_dateTimes2(filter_df)
+            if len(filter_df) > 0:
                 messages = []
-                messages.append(len(dates))
-                messages.append(dates)
+                messages.append(len(filter_df))
+                messages.append(filter_df)
                 # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
                 # dates['日期'] = dates['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
                 # date_df = date_df.where(pd.notnull(date_df), None)
@@ -98,7 +98,7 @@ def handle_file_message(event):
                 # for iplan in plan:
                 #     messages.append(iplan)
 
-                
+
                 # for date in dates:
                 #     date = str(date).split(' ')[0]
                 #     reply = f"{date}："
