@@ -74,7 +74,7 @@ def handle_file_message(event):
         try:            
             messages = []
             messages.append('SS')
-            messages.append(str(file_bytes))
+            messages.append(str(file_bytes.read()))
             # data = evalue_plan.get_excel_data(file_bytes)
             # messages.append(str(len(data)))
             # filter_df = evalue_plan.filter_valid_data(data)   
@@ -137,8 +137,8 @@ def handle_file_message(event):
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
 
         except Exception as e:
-            reply = "讀取 Excel 文件時發生錯誤：" + str(e)
-            messages.append(reply)
+            # reply = "讀取 Excel 文件時發生錯誤：" + str(e)
+            # messages.append(reply)
             line_bot_api.reply_message(event.reply_token, messages=messages)
 
     else:
