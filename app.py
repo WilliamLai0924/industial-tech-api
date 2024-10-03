@@ -3,6 +3,9 @@ import io
 import evalue_plan
 import clr
 import sys
+import requests
+import json
+import pandas as pd
 
 from flask import Flask, abort, jsonify, request
 from linebot import LineBotApi, WebhookHandler
@@ -12,9 +15,9 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage, FileMessa
 
 sys.path.append(os.path.dirname(__file__))
 
-clr.AddReference('plan_kernel')
+clr.AddReference('TaichungIndustialSystem.core')
 
-from plan_kernel import PlanControl
+from TaichungIndustialSystem.core import PlanArrangeControl
 
 app = Flask(__name__)
 
@@ -64,7 +67,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    control = PlanControl()
+    control = PlanArrangeControl()
     txt = control.Hello()
     line_bot_api.reply_message(
         event.reply_token,
@@ -88,11 +91,30 @@ def handle_file_message(event):
                     date = str(date).split(' ')[0]
                     reply = f"{date}："
                     messages.append(reply)
+
+                    date_df = filter_df[filter_df['日期'] == date]
+
+                    # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
+                    date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
+                    date_df = date_df.where(pd.notnull(date_df), None)
+                    date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
+                    data = {
+                        'EvalueList':date_df.values.tolist(),
+                        'Date':date.strftime("%Y-%m-%d")
+                    }
+                    json_data = json.dumps(data, ensure_ascii=False)
+                    # 設置請求標頭
+                    headers = {
+                        "Content-Type": "application/json"
+                    }
+                    # 發送 POST 請求
+                    plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
+                    messages.append(plan)
                     # 回傳處理後的數據
-                    plans_dict = evalue_plan.get_sameday_plan(filter_df, date)
-                    for k, v in plans_dict.items():
-                        messages.append(k + ":")
-                        messages.append(v)
+                    # plans_dict = evalue_plan.get_sameday_plan(filter_df, date)
+                    # for k, v in plans_dict.items():
+                    #     messages.append(k + ":")
+                    #     messages.append(v)
                 line_bot_api.reply_message(event.reply_token, messages)
             else:
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
