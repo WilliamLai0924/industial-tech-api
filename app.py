@@ -1,8 +1,6 @@
 import os
 import io
 import evalue_plan
-import clr
-import sys
 import requests
 import json
 import pandas as pd
