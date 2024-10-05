@@ -117,7 +117,6 @@ def handle_file_message(event):
                     date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
                     data = {
                         'EvalueList':date_df.values.tolist(),
-                        'Date':date.strftime("%Y-%m-%d")
                     }
                     json_data = json.dumps(data, ensure_ascii=False)
 
