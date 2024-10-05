@@ -73,16 +73,11 @@ def handle_file_message(event):
         file_bytes = io.BytesIO(message_content.content) 
         try:            
             messages = []
-            messages = [
-                TextSendMessage(text="這是第一則訊息"),
-                TextSendMessage(text="這是第二則訊息"),
-                TextSendMessage(text="這是第三則訊息")
-            ]
-            # data = evalue_plan.get_excel_data(file_bytes)
-            # messages.append(str(len(data)))
-            # filter_df = evalue_plan.filter_valid_data(data)   
-            # dates = evalue_plan.get_dateTimes2(filter_df)
-            if 1 > 0:
+            data = evalue_plan.get_excel_data(file_bytes)
+            messages.append(str(len(data)))
+            filter_df = evalue_plan.filter_valid_data(data)   
+            dates = evalue_plan.get_dateTimes(filter_df)
+            if len(dates) > 0:
                 # messages.append(len(data))
                 # messages.append(data)
                 # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
@@ -103,33 +98,31 @@ def handle_file_message(event):
                 
                 # for iplan in plan:
                 #     messages.append(iplan)
+                for date in dates:
+                    date = str(date).split(' ')[0]
+                    reply = f"{date}："
+                    messages.append(TextSendMessage(text=reply))
 
+                    # date_df = filter_df[filter_df['日期'] == date]
 
-                # for date in dates:
-                #     date = str(date).split(' ')[0]
-                #     reply = f"{date}："
-                #     messages.append(reply)
-
-                #     date_df = filter_df[filter_df['日期'] == date]
-
-                #     # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
-                #     date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
-                #     date_df = date_df.where(pd.notnull(date_df), None)
-                #     date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
-                #     data = {
-                #         'EvalueList':date_df.values.tolist(),
-                #         'Date':date.strftime("%Y-%m-%d")
-                #     }
-                #     json_data = json.dumps(data, ensure_ascii=False)
-                #     # 設置請求標頭
-                #     headers = {
-                #         "Content-Type": "application/json"
-                #     }
-                #     # 發送 POST 請求
-                #     plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
+                    # # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
+                    # date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
+                    # date_df = date_df.where(pd.notnull(date_df), None)
+                    # date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
+                    # data = {
+                    #     'EvalueList':date_df.values.tolist(),
+                    #     'Date':date.strftime("%Y-%m-%d")
+                    # }
+                    # json_data = json.dumps(data, ensure_ascii=False)
+                    # # 設置請求標頭
+                    # headers = {
+                    #     "Content-Type": "application/json"
+                    # }
+                    # # 發送 POST 請求
+                    # plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
                     
-                #     for iplan in plan:
-                #         messages.append(iplan)
+                    # for iplan in plan:
+                    #     messages.append(iplan)
                     # 回傳處理後的數據
                     # plans_dict = evalue_plan.get_sameday_plan(filter_df, date)
                     # for k, v in plans_dict.items():
