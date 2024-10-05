@@ -120,6 +120,14 @@ def handle_file_message(event):
                         'Date':date.strftime("%Y-%m-%d")
                     }
                     json_data = json.dumps(data, ensure_ascii=False)
+
+                    line_bot_api.push_message(
+                            event.source.user_id,
+                            [
+                                TextSendMessage(text=json_data)
+                            ]
+                    )
+
                     # 設置請求標頭
                     headers = {
                         "Content-Type": "application/json"
