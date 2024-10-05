@@ -73,14 +73,11 @@ def handle_file_message(event):
         file_bytes = io.BytesIO(message_content.content) 
         try:            
             messages = []
-            messages.append({
-                "type":"text",
-                "text":"Hello, user"
-            })
-            messages.append({
-                "type":"text",
-                "text":str(file_bytes.read())
-            })
+            messages = [
+                TextSendMessage(text="這是第一則訊息"),
+                TextSendMessage(text="這是第二則訊息"),
+                TextSendMessage(text="這是第三則訊息")
+            ]
             # data = evalue_plan.get_excel_data(file_bytes)
             # messages.append(str(len(data)))
             # filter_df = evalue_plan.filter_valid_data(data)   
