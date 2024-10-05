@@ -95,20 +95,15 @@ def handle_file_message(event):
                         "Content-Type": "application/json"
                     }
                     # 發送 POST 請求
-                    plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
-                    line_bot_api.push_message(
-                        event.source.user_id,
-                        [
-                            TextSendMessage(text=plan.text)
-                        ]
-                    )
-                    # for iplan in plan:
-                        # line_bot_api.push_message(
-                        #     event.source.user_id,
-                        #     [
-                        #         TextSendMessage(text=iplan)
-                        #     ]
-                        # )
+                    response = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
+                    plan = json.loads(response)
+                    for iplan in plan:
+                        line_bot_api.push_message(
+                            event.source.user_id,
+                            [
+                                TextSendMessage(text=iplan)
+                            ]
+                        )
             else:
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
 
