@@ -112,7 +112,7 @@ def handle_file_message(event):
                     # )
 
                     # # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
-                    # date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
+                    date_df['日期'] = date_df['日期'].apply(lambda x: pd.Timestamp(x).strftime('%Y-%m-%d'))
                     date_df = date_df.where(pd.notnull(date_df), None)
                     date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
                     data = {
