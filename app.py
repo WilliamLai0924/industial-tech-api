@@ -100,8 +100,7 @@ def handle_file_message(event):
                 #     messages.append(iplan)
                 for date in dates:
                     date = str(date).split(' ')[0]
-                    reply = f"{date}："
-                    messages.append(TextSendMessage(text=reply))
+                    messages.append(TextSendMessage(text=date + ":"))
 
                     # date_df = filter_df[filter_df['日期'] == date]
 
