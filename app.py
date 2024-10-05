@@ -96,7 +96,7 @@ def handle_file_message(event):
                     }
                     # 發送 POST 請求
                     response = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
-                    plan = json.loads(response)
+                    plan = json.loads(response.text)
                     for iplan in plan:
                         line_bot_api.push_message(
                             event.source.user_id,
