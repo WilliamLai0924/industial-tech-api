@@ -100,9 +100,16 @@ def handle_file_message(event):
                 #     messages.append(iplan)
                 for date in dates:
                     date = str(date).split(' ')[0]
-                    messages.append(TextSendMessage(text=str(date)))
 
-                    # date_df = filter_df[filter_df['日期'] == date]
+                    date_df = filter_df[filter_df['日期'] == date]
+                    line_bot_api.push_message(
+                        event.source.user_id,  # 使用者的 LINE user ID
+                        [
+                            TextSendMessage(text="這是第 6 則訊息"),
+                            TextSendMessage(text="這是第 7 則訊息"),
+                            TextSendMessage(text=str(date_df['日期']))
+                        ]
+                    )
 
                     # # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
                     # date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
