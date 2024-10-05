@@ -99,7 +99,7 @@ def handle_file_message(event):
                     line_bot_api.push_message(
                         event.source.user_id,
                         [
-                            TextSendMessage(text=json.dumps(plan, ensure_ascii=False))
+                            TextSendMessage(text=plan.text)
                         ]
                     )
                     # for iplan in plan:
