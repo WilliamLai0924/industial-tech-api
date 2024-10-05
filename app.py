@@ -74,7 +74,7 @@ def handle_file_message(event):
         try:            
             messages = []
             messages.append('SS')
-            messages.append(str(file_bytes.read()))
+            # messages.append(str(file_bytes.read()))
             # data = evalue_plan.get_excel_data(file_bytes)
             # messages.append(str(len(data)))
             # filter_df = evalue_plan.filter_valid_data(data)   
