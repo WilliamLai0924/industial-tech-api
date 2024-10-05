@@ -102,46 +102,45 @@ def handle_file_message(event):
                     date = str(date).split(' ')[0]
 
                     date_df = filter_df[filter_df['日期'] == date]
-                    line_bot_api.push_message(
-                        event.source.user_id,  # 使用者的 LINE user ID
-                        [
-                            TextSendMessage(text="這是第 6 則訊息"),
-                            TextSendMessage(text="這是第 7 則訊息"),
-                            TextSendMessage(text=str(date_df['日期']))
-                        ]
-                    )
+                    # line_bot_api.push_message(
+                    #     event.source.user_id,  # 使用者的 LINE user ID
+                    #     [
+                    #         TextSendMessage(text="這是第 6 則訊息"),
+                    #         TextSendMessage(text="這是第 7 則訊息"),
+                    #         TextSendMessage(text=str(date_df['日期']))
+                    #     ]
+                    # )
 
                     # # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
-                    # date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
-                    # date_df = date_df.where(pd.notnull(date_df), None)
-                    # date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
-                    # data = {
-                    #     'EvalueList':date_df.values.tolist(),
-                    #     'Date':date.strftime("%Y-%m-%d")
-                    # }
-                    # json_data = json.dumps(data, ensure_ascii=False)
-                    # # 設置請求標頭
-                    # headers = {
-                    #     "Content-Type": "application/json"
-                    # }
-                    # # 發送 POST 請求
-                    # plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
+                    date_df['日期'] = date_df['日期'].apply(lambda x: x.strftime('%Y-%m-%d'))
+                    date_df = date_df.where(pd.notnull(date_df), None)
+                    date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
+                    data = {
+                        'EvalueList':date_df.values.tolist(),
+                        'Date':date.strftime("%Y-%m-%d")
+                    }
+                    json_data = json.dumps(data, ensure_ascii=False)
+                    # 設置請求標頭
+                    headers = {
+                        "Content-Type": "application/json"
+                    }
+                    # 發送 POST 請求
+                    plan = requests.post('http://yuapp.runasp.net/api/PlanArrange', headers=headers, data=json_data)
                     
-                    # for iplan in plan:
-                    #     messages.append(iplan)
-                    # 回傳處理後的數據
-                    # plans_dict = evalue_plan.get_sameday_plan(filter_df, date)
-                    # for k, v in plans_dict.items():
-                    #     messages.append(k + ":")
-                    #     messages.append(v)
-                line_bot_api.reply_message(event.reply_token, messages=messages)
+                    for iplan in plan:
+                        line_bot_api.push_message(
+                            event.source.user_id,
+                            [
+                                TextSendMessage(text=iplan)
+                            ]
+                        )
             else:
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="尚未安排未來行程!請在確認文件內容!"))
 
         except Exception as e:
             # reply = "讀取 Excel 文件時發生錯誤：" + str(e)
             # messages.append(reply)
-            line_bot_api.reply_message(event.reply_token, messages=messages)
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(e)))
 
     else:
         reply = "請上傳 .xlsx 檔案格式的文件。"
