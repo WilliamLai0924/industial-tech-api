@@ -72,14 +72,11 @@ def handle_file_message(event):
         message_content = line_bot_api.get_message_content(message_id)
         file_bytes = io.BytesIO(message_content.content) 
         try:            
-            messages = []
             data = evalue_plan.get_excel_data(file_bytes)
-            messages.append(str(len(data)))
             filter_df = evalue_plan.filter_valid_data(data)   
             dates = evalue_plan.get_dateTimes(filter_df)
             if len(dates) > 0:
                 for date in dates:
-                    date = str(date).split(' ')[0]
                     date_df = filter_df[filter_df['日期'] == date]
                     # # 將 DataFrame 中的 Timestamp 列轉換為字符串格式
                     date_df['日期'] = date_df['日期'].apply(lambda x: pd.Timestamp(x).strftime('%Y-%m-%d'))
@@ -87,7 +84,7 @@ def handle_file_message(event):
                     date_df = date_df.applymap(lambda x: None if pd.isna(x) else x)
                     data = {
                         'EvalueList':date_df.values.tolist(),
-                        'Date': '2024-10-05'
+                        'Date': pd.Timestamp(date).strftime('%Y-%m-%d')
                     }
                     json_data = json.dumps(data, ensure_ascii=False)
                     # 設置請求標頭
