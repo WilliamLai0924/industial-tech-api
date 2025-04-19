@@ -10,8 +10,10 @@ from flask import Flask, abort, jsonify, request
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, FileMessage
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
+scheduler = BackgroundScheduler()
 
 channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
 channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
@@ -112,6 +114,13 @@ def handle_file_message(event):
     else:
         reply = "請上傳 .xlsx 檔案格式的文件。"
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+
+def call_api(url:str):
+    requests.get(url)
+
+# add scheduler
+scheduler.add_job(call_api,'interval',minutes=12,args=['https://industial-tech-api.onrender.com/api/hello'])
+scheduler.start()
 
 if __name__ == '__main__':
     app.run(debug=True)
